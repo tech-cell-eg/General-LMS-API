@@ -46,6 +46,11 @@ class CoursesController extends Controller
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please move this to CourseFilter...
+    |--------------------------------------------------------------------------
+    */
     protected function applySorting($query, $sortBy)
     {
         switch ($sortBy) {

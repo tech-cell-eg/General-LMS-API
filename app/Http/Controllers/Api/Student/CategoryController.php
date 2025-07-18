@@ -36,6 +36,12 @@ class CategoryController extends Controller
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use invokable class for this method...
+    |  exist an error in CategoryCollection...
+    |--------------------------------------------------------------------------
+    */
     public function popular()
     {
         $categories = Category::withCount('courses')

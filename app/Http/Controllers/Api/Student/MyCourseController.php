@@ -52,6 +52,11 @@ class MyCourseController extends Controller
         ], 'Course details retrieved successfully');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please make this in another controller because this make the controller make more than one responsibility...
+    |--------------------------------------------------------------------------
+    */
     protected function getSimilarCourses(Course $course)
     {
         return Course::where('category_id', $course->category_id)

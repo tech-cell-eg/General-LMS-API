@@ -14,6 +14,12 @@ class CartController extends Controller
 {
     use ApiResponse;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please not use try and catch ...
+    |  Please rename the method to index...
+    |--------------------------------------------------------------------------
+    */
     public function getCart()
     {
         try {
@@ -29,6 +35,14 @@ class CartController extends Controller
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please rename the method to store...
+    |  Please not use try and catch ...
+    |  Please make the validation in separate form request...
+    |  please return success or error using trait...
+    |--------------------------------------------------------------------------
+    */
     public function addToCart(Request $request)
     {
         $request->validate([
@@ -53,6 +67,12 @@ class CartController extends Controller
         return $this->getCart();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please rename the method to destroy...
+    |  please return success or error using trait...
+    |--------------------------------------------------------------------------
+    */
     public function removeFromCart($itemId)
     {
         $cart = ShoppingCart::where('user_id', Auth::id())->firstOrFail();
@@ -61,6 +81,11 @@ class CartController extends Controller
         return $this->getCart();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateTotal(ShoppingCart $cart)
     {
         return $cart->items->reduce(function ($carry, $item) {

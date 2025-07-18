@@ -15,6 +15,12 @@ class CheckoutController extends Controller
 {
     use ApiResponse;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please rename the method to store...
+    |  Please use service repository...
+    |--------------------------------------------------------------------------
+    */
     public function checkout(Request $request)
     {
         $cart = ShoppingCart::with('items.course')
@@ -63,11 +69,21 @@ class CheckoutController extends Controller
         });
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateSubtotal(ShoppingCart $cart)
     {
         return $cart->items->sum('price_at_addition');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateDiscount(ShoppingCart $cart)
     {
         return $cart->items->reduce(function ($carry, $item) {
@@ -75,11 +91,21 @@ class CheckoutController extends Controller
         }, 0);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateTax(ShoppingCart $cart)
     {
         return $this->calculateSubtotal($cart) * 0.1; // 10% tax
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateTotal(ShoppingCart $cart)
     {
         return $this->calculateSubtotal($cart) - $this->calculateDiscount($cart) + $this->calculateTax($cart);

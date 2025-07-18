@@ -19,6 +19,12 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        |  Remove this and move it form request...
+        |--------------------------------------------------------------------------
+        */
+
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -44,7 +50,7 @@ class AuthController extends Controller
         // Handle avatar upload
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
-            $userData['avatar_url'] = asset('storage/'.$path);
+            $userData['avatar_url'] = asset('storage/' . $path);
         }
 
         $user = User::create($userData);
@@ -90,6 +96,11 @@ class AuthController extends Controller
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please more this in ProfileController...
+    |--------------------------------------------------------------------------
+    */
     public function updateProfile(UpdateProfileRequest $request)
     {
         $user = $request->user();
@@ -100,7 +111,7 @@ class AuthController extends Controller
         if ($request->hasFile('avatar')) {
             // Delete old avatar if exists
             if ($user->avatar_url) {
-                Storage::delete('public/'.$user->avatar_url);
+                Storage::delete('public/' . $user->avatar_url);
             }
 
             $path = $request->file('avatar')->store('avatars', 'public');
@@ -137,6 +148,11 @@ class AuthController extends Controller
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please more this in in ProfileController...
+    |--------------------------------------------------------------------------
+    */
     public function updatePassword(Request $request)
     {
         $request->validate([

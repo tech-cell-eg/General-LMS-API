@@ -11,8 +11,18 @@ class Category extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['name', 'image', 'slug'];
+    // make it each filed under each the previous one not in the same line 
 
+    protected $fillable = [
+        'name',
+        'image',
+        'slug'
+    ];
+
+    /**
+     * Get the courses for the category.
+     * return the courses for the category
+     */
     protected $appends = ['image_url'];
 
     public function courses(): HasMany

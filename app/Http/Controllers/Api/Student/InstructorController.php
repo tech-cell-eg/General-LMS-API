@@ -50,6 +50,11 @@ class InstructorController extends Controller
         ], 'Instructor details retrieved successfully');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please user controller to get courses because this make the controller make more than one responsibility...
+    |--------------------------------------------------------------------------
+    */
     // Get courses by this instructor
     public function courses(User $instructor)
     {

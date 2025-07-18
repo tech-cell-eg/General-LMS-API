@@ -12,6 +12,11 @@ class ReviewController extends Controller
 {
     use ApiResponse;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please rename the method to index and rename the method to myReviews...
+    |--------------------------------------------------------------------------
+    */
     // Get my reviews
     public function myReviews()
     {
