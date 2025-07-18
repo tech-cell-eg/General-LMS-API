@@ -13,6 +13,7 @@ class CourseFilter
                 $this->$filter($query, $value);
             }
         }
+
         return $query;
     }
 
@@ -35,6 +36,7 @@ class CourseFilter
     {
         $query->having('sections_count', '=', $value);
     }
+
     protected function is_featured(Builder $query, $value): void
     {
         // Handle both string 'true/false' and boolean true/false

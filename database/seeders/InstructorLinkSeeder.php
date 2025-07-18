@@ -15,10 +15,10 @@ class InstructorLinkSeeder extends Seeder
 
         foreach ($instructors as $instructor) {
             $links = [
-                ['title' => 'LinkedIn', 'url' => 'https://linkedin.com/in/' . Str::slug($instructor->name), 'icon_class' => 'fab fa-linkedin'],
-                ['title' => 'GitHub', 'url' => 'https://github.com/' . Str::slug($instructor->username), 'icon_class' => 'fab fa-github'],
-                ['title' => 'Personal Website', 'url' => 'https://' . Str::slug($instructor->username) . '.com', 'icon_class' => 'fas fa-globe'],
-                ['title' => 'Twitter', 'url' => 'https://twitter.com/' . Str::slug($instructor->username), 'icon_class' => 'fab fa-twitter'],
+                ['title' => 'LinkedIn', 'url' => 'https://linkedin.com/in/'.Str::slug($instructor->name), 'icon_class' => 'fab fa-linkedin'],
+                ['title' => 'GitHub', 'url' => 'https://github.com/'.Str::slug($instructor->username), 'icon_class' => 'fab fa-github'],
+                ['title' => 'Personal Website', 'url' => 'https://'.Str::slug($instructor->username).'.com', 'icon_class' => 'fas fa-globe'],
+                ['title' => 'Twitter', 'url' => 'https://twitter.com/'.Str::slug($instructor->username), 'icon_class' => 'fab fa-twitter'],
             ];
 
             // Each instructor gets 2-4 links

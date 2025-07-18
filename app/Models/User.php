@@ -1,14 +1,16 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
+
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes, HasFactory, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'first_name',
@@ -18,11 +20,13 @@ class User extends Authenticatable
         'password',
         'avatar_url',
         'role',
-        'email_verified_at'
+        'email_verified_at',
     ];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     protected $hidden = ['password', 'remember_token'];
 
     public function profile()
@@ -82,15 +86,13 @@ class User extends Authenticatable
 
     public function ImageUrlAttribute()
     {
-        return $this->avatar_url ? asset('storage/' . $this->avatar_url) : null;
+        return $this->avatar_url ? asset('storage/'.$this->avatar_url) : null;
     }
+
     public function getAvatarUrlAttribute($value)
     {
-        return $value ? asset('storage/' . $value) : null;
+        return $value ? asset('storage/'.$value) : null;
     }
-
-
-
 
     public function isInstructor()
     {

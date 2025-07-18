@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Order;
 use App\Models\Course;
 use App\Models\Enrollment;
+use App\Models\Order;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class EnrollmentSeeder extends Seeder

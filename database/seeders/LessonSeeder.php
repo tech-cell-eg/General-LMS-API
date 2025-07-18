@@ -63,9 +63,9 @@ class LessonSeeder extends Seeder
     private function getContentUrl($type)
     {
         return $type === 'video'
-            ? 'https://example.com/videos/' . Str::random(10)
+            ? 'https://example.com/videos/'.Str::random(10)
             : ($type === 'article'
-                ? 'https://example.com/articles/' . Str::random(10)
-                : 'https://example.com/quizzes/' . Str::random(10));
+                ? 'https://example.com/articles/'.Str::random(10)
+                : 'https://example.com/quizzes/'.Str::random(10));
     }
 }

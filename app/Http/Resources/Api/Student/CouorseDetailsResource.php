@@ -43,7 +43,7 @@ class CouorseDetailsResource extends JsonResource
                     'id' => $review->user->id,
                     'name' => $review->user->full_name,
                     'image' => $review->user->avatar_url,
-                ]
+                ],
             ];
         });
 
@@ -68,7 +68,7 @@ class CouorseDetailsResource extends JsonResource
             'is_featured' => (bool) $this->is_featured,
 
             'instructor' => [
-                'full_name' => $instructor->first_name . ' ' . $instructor->last_name,
+                'full_name' => $instructor->first_name.' '.$instructor->last_name,
                 'image' => $instructor->avatar_url,
                 'languages' => $languages,
                 'total_reviews' => $instructorProfile->total_reviews ?? 0,
@@ -87,9 +87,9 @@ class CouorseDetailsResource extends JsonResource
                     'date' => $review->created_at->format('Y-m-d'),
                     'reviewer' => [
                         'id' => $review->user->id,
-                        'name' => $review->user->first_name . ' ' . $review->user->last_name,
+                        'name' => $review->user->first_name.' '.$review->user->last_name,
                         'image' => $review->user->avatar_url,
-                    ]
+                    ],
                 ];
             }),
 
@@ -99,7 +99,7 @@ class CouorseDetailsResource extends JsonResource
                 'created_at' => $this->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
                 'published_at' => $this->published_at,
-            ]
+            ],
         ];
     }
 }

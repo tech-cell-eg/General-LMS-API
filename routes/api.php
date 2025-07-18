@@ -12,11 +12,6 @@ use App\Http\Controllers\Api\Student\TestimonialController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-
-
-
-
-
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
@@ -37,11 +32,9 @@ Route::get('courses', [CoursesController::class, 'index']);
 Route::get('instructors', [InstructorController::class, 'index']);
 Route::get('testimonials', [TestimonialController::class, 'index']);
 
-
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('courses/{course}', [CoursesController::class, 'show']);
 });
-
 
 Route::middleware('auth:sanctum')->group(function () {
     // Cart routes
@@ -52,7 +45,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Checkout route
     Route::post('/checkout', [CheckoutController::class, 'checkout']);
 });
-
 
 Route::middleware('auth:sanctum')->group(function () {
     // My Courses (Courses I'm enrolled in)

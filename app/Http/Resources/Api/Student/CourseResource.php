@@ -4,7 +4,6 @@ namespace App\Http\Resources\Api\Student;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CourseResource extends JsonResource
 {

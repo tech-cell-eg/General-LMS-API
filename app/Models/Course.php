@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model
@@ -28,7 +27,7 @@ class Course extends Model
         'status',
         'total_hours',
         'total_lectures',
-        'published_at'
+        'published_at',
     ];
 
     protected $dates = ['published_at'];
@@ -76,6 +75,6 @@ class Course extends Model
     // Accessor for image URL
     public function getImageUrlAttribute()
     {
-        return $this->thumbnail_url ? asset('storage/' . $this->thumbnail_url) : null;
+        return $this->thumbnail_url ? asset('storage/'.$this->thumbnail_url) : null;
     }
 }

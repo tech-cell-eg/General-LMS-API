@@ -15,11 +15,11 @@ class Order extends Model
         'total',
         'payment_method',
         'payment_status',
-        'billing_address'
+        'billing_address',
     ];
 
     protected $casts = [
-        'billing_address' => 'array'
+        'billing_address' => 'array',
     ];
 
     public function user()

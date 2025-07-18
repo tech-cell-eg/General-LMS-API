@@ -6,7 +6,6 @@ use App\Models\Message;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-
 class MessageSeeder extends Seeder
 {
     public function run()
@@ -50,11 +49,12 @@ class MessageSeeder extends Seeder
     private function getStudentMessage()
     {
         $messages = [
-            "Hi, I have a question about the course material from Lesson 3. Could you clarify the concept of...",
+            'Hi, I have a question about the course material from Lesson 3. Could you clarify the concept of...',
             "I'm having trouble with the assignment. Could you provide some additional guidance?",
-            "Thank you for the detailed feedback on my project! It was very helpful.",
+            'Thank you for the detailed feedback on my project! It was very helpful.',
             "I wanted to let you know how much I'm enjoying the course. The content is exactly what I was looking for.",
         ];
+
         return $messages[array_rand($messages)];
     }
 
@@ -63,9 +63,10 @@ class MessageSeeder extends Seeder
         $messages = [
             "Hi there, I noticed you haven't completed the last assignment yet. Do you need any help?",
             "I've reviewed your project submission and left detailed feedback. Great work overall!",
-            "Just checking in to see if you have any questions about the course material.",
-            "Congratulations on completing the course! Would you be interested in providing a testimonial?",
+            'Just checking in to see if you have any questions about the course material.',
+            'Congratulations on completing the course! Would you be interested in providing a testimonial?',
         ];
+
         return $messages[array_rand($messages)];
     }
 }

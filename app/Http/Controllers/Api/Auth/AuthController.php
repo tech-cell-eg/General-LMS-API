@@ -44,7 +44,7 @@ class AuthController extends Controller
         // Handle avatar upload
         if ($request->hasFile('avatar')) {
             $path = $request->file('avatar')->store('avatars', 'public');
-            $userData['avatar_url'] = asset('storage/' . $path);
+            $userData['avatar_url'] = asset('storage/'.$path);
         }
 
         $user = User::create($userData);
@@ -59,7 +59,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (! Auth::attempt($request->only('email', 'password'))) {
             return $this->error('Invalid login details', 401);
         }
 
@@ -83,12 +83,12 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = $request->user()->load('profile');
+
         return $this->success(
             new UserResource($user),
             'User retrieved successfully'
         );
     }
-
 
     public function updateProfile(UpdateProfileRequest $request)
     {
@@ -100,7 +100,7 @@ class AuthController extends Controller
         if ($request->hasFile('avatar')) {
             // Delete old avatar if exists
             if ($user->avatar_url) {
-                Storage::delete('public/' . $user->avatar_url);
+                Storage::delete('public/'.$user->avatar_url);
             }
 
             $path = $request->file('avatar')->store('avatars', 'public');
@@ -127,7 +127,7 @@ class AuthController extends Controller
         $user->update($data);
 
         // Update or create profile
-        if (!empty($profileData)) {
+        if (! empty($profileData)) {
             $user->profile()->updateOrCreate(['user_id' => $user->id], $profileData);
         }
 
@@ -136,7 +136,6 @@ class AuthController extends Controller
             'Profile updated successfully'
         );
     }
-
 
     public function updatePassword(Request $request)
     {

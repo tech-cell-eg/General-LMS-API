@@ -18,7 +18,8 @@ class ShoppingCart extends Model
         return $this->hasMany(CartItem::class, 'cart_id'); // explicitly set the foreign key
     }
 
-    public function cart(){
+    public function cart()
+    {
         return $this->hasMany(CartItem::class);
     }
 }

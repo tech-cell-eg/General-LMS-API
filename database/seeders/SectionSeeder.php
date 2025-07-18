@@ -38,6 +38,7 @@ class SectionSeeder extends Seeder
             'Best Practices',
             'Next Steps',
         ];
+
         return $titles[$index - 1] ?? "Module $index";
     }
 
@@ -53,6 +54,7 @@ class SectionSeeder extends Seeder
             'Learn industry standards and professional approaches',
             'Where to go from here and additional resources',
         ];
-        return $descriptions[$index - 1] ?? "This section covers important concepts for this course";
+
+        return $descriptions[$index - 1] ?? 'This section covers important concepts for this course';
     }
 }

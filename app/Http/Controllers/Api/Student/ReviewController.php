@@ -16,16 +16,16 @@ class ReviewController extends Controller
     public function myReviews()
     {
         $reviews = Review::where('user_id', Auth::id())
-            ->with(['reviewable' => function($query) {
+            ->with(['reviewable' => function ($query) {
                 $query->morphWith([
-                    Course::class => ['instructor']
+                    Course::class => ['instructor'],
                 ]);
             }])
             ->latest()
             ->paginate(10);
 
         return $this->success([
-            'reviews' => $reviews
+            'reviews' => $reviews,
         ], 'My reviews retrieved successfully');
     }
 }

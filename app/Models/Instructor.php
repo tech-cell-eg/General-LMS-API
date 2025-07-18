@@ -12,11 +12,11 @@ class Instructor extends Model
         'areas_of_expertise',
         'professional_experience',
         'total_students',
-        'average_rating'
+        'average_rating',
     ];
 
     protected $casts = [
-        'areas_of_expertise' => 'array'
+        'areas_of_expertise' => 'array',
     ];
 
     public function user()

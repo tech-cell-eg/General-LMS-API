@@ -22,17 +22,17 @@ class CartController extends Controller
 
             return $this->success([
                 'cart' => $cart,
-                'total' => $this->calculateTotal($cart)
+                'total' => $this->calculateTotal($cart),
             ], 'Cart retrieved successfully');
         } catch (\Exception $e) {
-            return $this->error('Failed to retrieve cart: ' . $e->getMessage(), 500);
+            return $this->error('Failed to retrieve cart: '.$e->getMessage(), 500);
         }
     }
 
     public function addToCart(Request $request)
     {
         $request->validate([
-            'course_id' => 'required|exists:courses,id'
+            'course_id' => 'required|exists:courses,id',
         ]);
 
         $course = Course::findOrFail($request->course_id);
@@ -47,7 +47,7 @@ class CartController extends Controller
             'cart_id' => $cart->id,
             'course_id' => $course->id,
             'price_at_addition' => $course->price,
-            'discount_at_addition' => $course->discount_price
+            'discount_at_addition' => $course->discount_price,
         ]);
 
         return $this->getCart();

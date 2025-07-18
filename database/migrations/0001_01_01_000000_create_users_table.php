@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('users', function (Blueprint $table) {
-        $table->id();
-        $table->string('first_name');
-        $table->string('last_name');
-        $table->string('username')->unique();
-        $table->string('email')->unique();
-        $table->string('password');
-        $table->string('avatar_url')->nullable();
-        $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
-        $table->timestamp('email_verified_at')->nullable();
-        $table->rememberToken();
-        $table->timestamps();
-        $table->softDeletes();
-    });
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('username')->unique();
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('avatar_url')->nullable();
+            $table->enum('role', ['student', 'instructor', 'admin'])->default('student');
+            $table->timestamp('email_verified_at')->nullable();
+            $table->rememberToken();
+            $table->timestamps();
+            $table->softDeletes();
+        });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();

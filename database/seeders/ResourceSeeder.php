@@ -7,7 +7,6 @@ use App\Models\Resource;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
-
 class ResourceSeeder extends Seeder
 {
     public function run()
@@ -40,16 +39,17 @@ class ResourceSeeder extends Seeder
             'link' => ['Additional Reading', 'Reference Documentation', 'External Tutorial'],
             'attachment' => ['Slide Deck', 'Cheat Sheet', 'Worksheet'],
         ];
+
         return $titles[$type][array_rand($titles[$type])];
     }
 
     private function getResourceUrl($type)
     {
         return $type === 'file'
-            ? 'https://example.com/files/' . Str::random(10) . '.pdf'
+            ? 'https://example.com/files/'.Str::random(10).'.pdf'
             : ($type === 'link'
-                ? 'https://example.com/links/' . Str::random(10)
-                : 'https://example.com/attachments/' . Str::random(10));
+                ? 'https://example.com/links/'.Str::random(10)
+                : 'https://example.com/attachments/'.Str::random(10));
     }
 
     private function getResourceDescription($type)

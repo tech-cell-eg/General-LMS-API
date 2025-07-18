@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Api\Student;
-;
 
 use App\Http\Controllers\Controller;
-use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ShoppingCart;
@@ -31,14 +29,14 @@ class CheckoutController extends Controller
             // Create order
             $order = Order::create([
                 'user_id' => Auth::id(),
-                'order_number' => 'ORD-' . strtoupper(uniqid()),
+                'order_number' => 'ORD-'.strtoupper(uniqid()),
                 'subtotal' => $this->calculateSubtotal($cart),
                 'discount' => $this->calculateDiscount($cart),
                 'tax' => $this->calculateTax($cart),
                 'total' => $this->calculateTotal($cart),
                 'payment_method' => $request->payment_method ?? 'stripe',
                 'payment_status' => 'pending',
-                'billing_address' => $request->billing_address
+                'billing_address' => $request->billing_address,
             ]);
 
             // Create order items
@@ -48,7 +46,7 @@ class CheckoutController extends Controller
                     'course_id' => $item->course_id,
                     'price' => $item->price_at_addition,
                     'discount' => $item->discount_at_addition,
-                    'final_price' => $item->discount_at_addition ?? $item->price_at_addition
+                    'final_price' => $item->discount_at_addition ?? $item->price_at_addition,
                 ]);
             }
 
@@ -60,7 +58,7 @@ class CheckoutController extends Controller
 
             return $this->success([
                 'order' => $order,
-                'items' => $order->items
+                'items' => $order->items,
             ], 'Checkout successful');
         });
     }

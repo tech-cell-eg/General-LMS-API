@@ -7,7 +7,6 @@ use App\Models\Review;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-
 class ReviewSeeder extends Seeder
 {
     public function run()
@@ -59,6 +58,7 @@ class ReviewSeeder extends Seeder
             'Perfect for Beginners',
             'Advanced and Insightful',
         ];
+
         return $titles[array_rand($titles)];
     }
 
@@ -67,12 +67,13 @@ class ReviewSeeder extends Seeder
         $comments = [
             "This $courseTitle course exceeded my expectations. The instructor explains concepts clearly and provides practical examples.",
             "I've taken several courses on this topic, but this one stands out for its depth and clarity.",
-            "The course material is well-organized and the pacing is perfect. I never felt overwhelmed or bored.",
-            "The hands-on projects were particularly valuable. I now feel confident applying these skills in real-world scenarios.",
+            'The course material is well-organized and the pacing is perfect. I never felt overwhelmed or bored.',
+            'The hands-on projects were particularly valuable. I now feel confident applying these skills in real-world scenarios.',
             "The instructor's teaching style is engaging and makes complex topics easy to understand.",
-            "I appreciated the mix of theory and practical applications. The quizzes helped reinforce my learning.",
-            "The course content is up-to-date with current industry standards. I learned exactly what I needed to know.",
+            'I appreciated the mix of theory and practical applications. The quizzes helped reinforce my learning.',
+            'The course content is up-to-date with current industry standards. I learned exactly what I needed to know.',
         ];
+
         return $comments[array_rand($comments)];
     }
 
@@ -85,18 +86,20 @@ class ReviewSeeder extends Seeder
             'Very Responsive',
             'Supportive Mentor',
         ];
+
         return $titles[array_rand($titles)];
     }
 
     private function getInstructorReviewComment()
     {
         $comments = [
-            "The instructor has a deep understanding of the subject matter and explains concepts clearly.",
-            "Questions were answered promptly and with detailed explanations.",
+            'The instructor has a deep understanding of the subject matter and explains concepts clearly.',
+            'Questions were answered promptly and with detailed explanations.',
             "The instructor's enthusiasm for the subject is contagious and made learning enjoyable.",
             "I appreciated the instructor's real-world examples that connected theory to practice.",
-            "The feedback on assignments was constructive and helped me improve.",
+            'The feedback on assignments was constructive and helped me improve.',
         ];
+
         return $comments[array_rand($comments)];
     }
 }

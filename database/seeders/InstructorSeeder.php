@@ -37,8 +37,9 @@ class InstructorSeeder extends Seeder
             'Professional Educator',
             'Industry Expert',
             'Lead Trainer',
-            'Certified Instructor'
+            'Certified Instructor',
         ];
+
         return $titles[array_rand($titles)];
     }
 
@@ -49,8 +50,9 @@ class InstructorSeeder extends Seeder
             'Former lead developer at a Fortune 500 company',
             'Published author and conference speaker',
             'Created multiple popular online courses with thousands of students',
-            'Passionate educator with a focus on practical skills'
+            'Passionate educator with a focus on practical skills',
         ];
+
         return $experiences[array_rand($experiences)];
     }
 }
