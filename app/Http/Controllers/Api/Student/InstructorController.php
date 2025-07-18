@@ -4,14 +4,13 @@ namespace App\Http\Controllers\Api\Student;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Student\InstructorResource;
-use App\Models\Course;
 use App\Models\User;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 
 class InstructorController extends Controller
 {
     use ApiResponse;
+
     public function index()
     {
         $instructors = User::query()
@@ -22,7 +21,7 @@ class InstructorController extends Controller
                 'courses as courses_avg_reviews_avg_rating' => function ($query) {
                     $query->withAvg('reviews as reviews_avg', 'rating')
                         ->selectRaw('avg(reviews_avg)');
-                }
+                },
             ], 'id')
             ->latest()
             ->get();
@@ -33,11 +32,10 @@ class InstructorController extends Controller
         );
     }
 
-
     // Get instructor details
     public function show(User $instructor)
     {
-        if (!$instructor->isInstructor()) {
+        if (! $instructor->isInstructor()) {
             return $this->error('The specified user is not an instructor', 404);
         }
 
@@ -48,10 +46,15 @@ class InstructorController extends Controller
             'stats' => [
                 'total_students' => $instructor->totalStudents(),
                 'average_rating' => $instructor->averageRating(),
-            ]
+            ],
         ], 'Instructor details retrieved successfully');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please user controller to get courses because this make the controller make more than one responsibility...
+    |--------------------------------------------------------------------------
+    */
     // Get courses by this instructor
     public function courses(User $instructor)
     {
@@ -61,7 +64,7 @@ class InstructorController extends Controller
 
         return $this->success([
             'courses' => $courses,
-            'instructor' => $instructor->only(['id', 'name', 'avatar'])
+            'instructor' => $instructor->only(['id', 'name', 'avatar']),
         ], 'Instructor courses retrieved successfully');
     }
 }

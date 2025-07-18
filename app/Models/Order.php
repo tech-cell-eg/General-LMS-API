@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Order extends Model
 {
@@ -15,24 +17,36 @@ class Order extends Model
         'total',
         'payment_method',
         'payment_status',
-        'billing_address'
+        'billing_address',
     ];
 
     protected $casts = [
-        'billing_address' => 'array'
+        'billing_address' => 'array',
     ];
 
-    public function user()
+    /**
+     * Get the user for the order.
+     * return the user that the order belongs to
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function items()
+    /**
+     * Get the items for the order.
+     * return the items for the order
+     */
+    public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
-    }
+    }   
 
-    public function enrollments()
+    /**
+     * Get the enrollments for the order.
+     * return the enrollments for the order
+     */
+    public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
     }

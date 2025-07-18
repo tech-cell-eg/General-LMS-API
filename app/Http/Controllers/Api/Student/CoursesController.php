@@ -5,11 +5,10 @@ namespace App\Http\Controllers\Api\Student;
 use App\Filters\CourseFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\Student\CouorseDetailsResource;
-use App\Http\Resources\Api\Student\CourseResource;
+use App\Http\Resources\Api\Student\CourseCollection;
 use App\Models\Course;
 use App\Traits\ApiResponse;
 use Illuminate\Http\Request;
-use App\Http\Resources\Api\Student\CourseCollection;
 
 class CoursesController extends Controller
 {
@@ -30,10 +29,10 @@ class CoursesController extends Controller
             'price',         // Filter by maximum price
             'category',     // Filter by category ID
             'sections',       // Filter by minimum number of sections
-            'is_featured' // Filter by featured status
+            'is_featured', // Filter by featured status
         ]);
 
-        $query = (new CourseFilter())->apply($query, $filters);
+        $query = (new CourseFilter)->apply($query, $filters);
 
         // Apply sorting
         $sortBy = $request->input('sort_by', 'latest'); // Default sorting
@@ -47,6 +46,11 @@ class CoursesController extends Controller
         );
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please move this to CourseFilter...
+    |--------------------------------------------------------------------------
+    */
     protected function applySorting($query, $sortBy)
     {
         switch ($sortBy) {
@@ -64,7 +68,6 @@ class CoursesController extends Controller
         }
     }
 
-
     public function show($id)
     {
         $course = Course::with([
@@ -73,7 +76,7 @@ class CoursesController extends Controller
             'sections.lessons',
             'reviews.user',
             'metadata',
-            'enrollments'
+            'enrollments',
         ])->findOrFail($id);
 
         return new CouorseDetailsResource($course);

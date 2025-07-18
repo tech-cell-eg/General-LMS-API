@@ -8,12 +8,14 @@ class CouorseDetailsResource extends JsonResource
 {
     public function toArray($request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        |  Please refactor this resource and make all this calculation for example in the model...
+        |--------------------------------------------------------------------------
+        */
         // Calculate average rating and total reviews
         $averageRating = $this->reviews->avg('rating') ?? 0;
         $totalReviews = $this->reviews->count();
-
-        // Calculate total students (assuming this is available through enrollments)
-        $totalStudents = $this->enrollments->count();
 
         // Get instructor metadata
         $instructor = $this->instructor;
@@ -43,7 +45,7 @@ class CouorseDetailsResource extends JsonResource
                     'id' => $review->user->id,
                     'name' => $review->user->full_name,
                     'image' => $review->user->avatar_url,
-                ]
+                ],
             ];
         });
 
@@ -67,8 +69,13 @@ class CouorseDetailsResource extends JsonResource
             'certification_available' => (bool) $this->certification_available,
             'is_featured' => (bool) $this->is_featured,
 
+            /*
+            |--------------------------------------------------------------------------
+            |  Please use resource to get instructor...
+            |--------------------------------------------------------------------------
+            */
             'instructor' => [
-                'full_name' => $instructor->first_name . ' ' . $instructor->last_name,
+                'full_name' => $instructor->first_name.' '.$instructor->last_name,
                 'image' => $instructor->avatar_url,
                 'languages' => $languages,
                 'total_reviews' => $instructorProfile->total_reviews ?? 0,
@@ -80,6 +87,11 @@ class CouorseDetailsResource extends JsonResource
 
             'syllabus' => $sections,
 
+            /*
+            |--------------------------------------------------------------------------
+            |  Please use resource to get reviews...
+            |--------------------------------------------------------------------------
+            */
             'reviews' => $this->reviews->map(function ($review) {
                 return [
                     'comment' => $review->comment,
@@ -87,9 +99,9 @@ class CouorseDetailsResource extends JsonResource
                     'date' => $review->created_at->format('Y-m-d'),
                     'reviewer' => [
                         'id' => $review->user->id,
-                        'name' => $review->user->first_name . ' ' . $review->user->last_name,
+                        'name' => $review->user->first_name.' '.$review->user->last_name,
                         'image' => $review->user->avatar_url,
-                    ]
+                    ],
                 ];
             }),
 
@@ -99,7 +111,7 @@ class CouorseDetailsResource extends JsonResource
                 'created_at' => $this->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
                 'published_at' => $this->published_at,
-            ]
+            ],
         ];
     }
 }

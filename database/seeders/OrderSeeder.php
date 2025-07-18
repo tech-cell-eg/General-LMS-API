@@ -26,7 +26,7 @@ class OrderSeeder extends Seeder
 
                 $order = Order::create([
                     'user_id' => $student->id,
-                    'order_number' => 'ORD-' . strtoupper(Str::random(8)),
+                    'order_number' => 'ORD-'.strtoupper(Str::random(8)),
                     'subtotal' => 0,
                     'discount' => 0,
                     'tax' => 0,
@@ -75,13 +75,14 @@ class OrderSeeder extends Seeder
     private function getRandomPaymentMethod()
     {
         $methods = ['credit_card', 'paypal', 'stripe', 'bank_transfer'];
+
         return $methods[array_rand($methods)];
     }
 
     private function getBillingAddress()
     {
         return [
-            'street' => rand(100, 999) . ' Main St',
+            'street' => rand(100, 999).' Main St',
             'city' => ['New York', 'London', 'Tokyo', 'Sydney', 'Berlin'][array_rand([0, 1, 2, 3, 4])],
             'state' => ['NY', 'CA', 'TX', 'FL', 'IL'][array_rand([0, 1, 2, 3, 4])],
             'zip' => rand(10000, 99999),

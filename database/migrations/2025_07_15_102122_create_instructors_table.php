@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('instructors', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-        $table->string('title')->nullable();
-        $table->json('areas_of_expertise')->nullable();
-        $table->text('professional_experience')->nullable();
-        $table->unsignedInteger('total_students')->default(0);
-        $table->decimal('average_rating', 3, 2)->default(0);
-        $table->timestamps();
-    });
+        Schema::create('instructors', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('title')->nullable();
+            $table->json('areas_of_expertise')->nullable();
+            $table->text('professional_experience')->nullable();
+            $table->unsignedInteger('total_students')->default(0);
+            $table->decimal('average_rating', 3, 2)->default(0);
+            $table->timestamps();
+        });
     }
 
     /**

@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Enrollment;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+
 class MyCourseController extends Controller
 {
     use ApiResponse;
@@ -18,17 +18,18 @@ class MyCourseController extends Controller
         $user = Auth::user();
 
         $courses = Course::with(['instructor', 'category'])
-            ->whereHas('enrollments', function($query) use ($user) {
+            ->whereHas('enrollments', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
             ->get();
 
         return $this->success([
             'courses' => $courses,
-            'total_courses' => $courses->count()
+            'total_courses' => $courses->count(),
         ], 'My courses retrieved successfully');
     }
- // Get course details
+
+    // Get course details
     public function show(Course $course)
     {
         $course->load([
@@ -36,7 +37,7 @@ class MyCourseController extends Controller
             'category',
             'sections.lessons',
             'metadata',
-            'reviews.user'
+            'reviews.user',
         ]);
 
         // Check if user is enrolled
@@ -47,10 +48,15 @@ class MyCourseController extends Controller
         return $this->success([
             'course' => $course,
             'is_enrolled' => $isEnrolled,
-            'similar_courses' => $this->getSimilarCourses($course)
+            'similar_courses' => $this->getSimilarCourses($course),
         ], 'Course details retrieved successfully');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please make this in another controller because this make the controller make more than one responsibility...
+    |--------------------------------------------------------------------------
+    */
     protected function getSimilarCourses(Course $course)
     {
         return Course::where('category_id', $course->category_id)

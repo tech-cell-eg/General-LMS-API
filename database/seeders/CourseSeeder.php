@@ -115,6 +115,7 @@ class CourseSeeder extends Seeder
             'https://source.unsplash.com/random/800x600/?technology',
             'https://source.unsplash.com/random/800x600/?computer',
         ];
+
         return $thumbnails[array_rand($thumbnails)];
     }
 

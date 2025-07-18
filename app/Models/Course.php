@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class Course extends Model
 {
@@ -28,54 +30,89 @@ class Course extends Model
         'status',
         'total_hours',
         'total_lectures',
-        'published_at'
+        'published_at',
     ];
 
     protected $dates = ['published_at'];
 
-    public function instructor()
+    /**
+     * Get the instructor for the course.
+     * return the instructor that the course belongs to
+     */
+    public function instructor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'instructor_id');
     }
 
-    public function metadata()
+    /**
+     * Get the metadata for the course.
+     * return the metadata for the course
+     */
+    public function metadata(): HasOne
     {
         return $this->hasOne(CourseMetadata::class);
     }
 
-    public function sections()
+    /**
+     * Get the sections for the course.
+     * return the sections for the course
+     */
+    public function sections(): HasMany
     {
         return $this->hasMany(Section::class);
     }
 
-    public function reviews()
+    /**
+     * Get the reviews for the course.
+     * return the reviews for the course
+     */
+    public function reviews(): MorphMany
     {
         return $this->morphMany(Review::class, 'reviewable');
     }
 
-    public function enrollments()
+    /**
+     * Get the enrollments for the course.
+     * return the enrollments for the course
+     */
+    public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
     }
 
-    public function orderItems()
+    /**
+     * Get the order items for the course.
+     * return the order items for the course
+     */
+    public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
     }
 
-    public function cartItems()
+    /**
+     * Get the cart items for the course.
+     * return the cart items for the course
+     */
+    public function cartItems(): HasMany
     {
         return $this->hasMany(CartItem::class);
     }
 
+    /**
+     * Get the category for the course.
+     * return the category for the course
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    // Accessor for image URL
+    /**
+     * Get the image url for the course.
+     * return the image url for the course
+     */
     public function getImageUrlAttribute()
     {
-        return $this->thumbnail_url ? asset('storage/' . $this->thumbnail_url) : null;
+        return $this->thumbnail_url ? asset('storage/'.$this->thumbnail_url) : null;
     }
 }

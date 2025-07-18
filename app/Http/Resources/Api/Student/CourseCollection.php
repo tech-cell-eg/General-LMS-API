@@ -14,6 +14,11 @@ class CourseCollection extends ResourceCollection
      */
     public function toArray(Request $request): array
     {
+        /*
+        |--------------------------------------------------------------------------
+        |  Please use the pagination for laravel not custom the pagination...
+        |--------------------------------------------------------------------------
+        */
         return [
             'data' => CourseResource::collection($this->collection),
             'meta' => [
@@ -36,8 +41,8 @@ class CourseCollection extends ResourceCollection
     /**
      * Customize the response for the request.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \Illuminate\Http\JsonResponse $response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\JsonResponse  $response
      * @return void
      */
     public function withResponse($request, $response)

@@ -14,6 +14,12 @@ class CartController extends Controller
 {
     use ApiResponse;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please not use try and catch ...
+    |  Please rename the method to index...
+    |--------------------------------------------------------------------------
+    */
     public function getCart()
     {
         try {
@@ -22,17 +28,25 @@ class CartController extends Controller
 
             return $this->success([
                 'cart' => $cart,
-                'total' => $this->calculateTotal($cart)
+                'total' => $this->calculateTotal($cart),
             ], 'Cart retrieved successfully');
         } catch (\Exception $e) {
-            return $this->error('Failed to retrieve cart: ' . $e->getMessage(), 500);
+            return $this->error('Failed to retrieve cart: '.$e->getMessage(), 500);
         }
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please rename the method to store...
+    |  Please not use try and catch ...
+    |  Please make the validation in separate form request...
+    |  please return success or error using trait...
+    |--------------------------------------------------------------------------
+    */
     public function addToCart(Request $request)
     {
         $request->validate([
-            'course_id' => 'required|exists:courses,id'
+            'course_id' => 'required|exists:courses,id',
         ]);
 
         $course = Course::findOrFail($request->course_id);
@@ -47,12 +61,18 @@ class CartController extends Controller
             'cart_id' => $cart->id,
             'course_id' => $course->id,
             'price_at_addition' => $course->price,
-            'discount_at_addition' => $course->discount_price
+            'discount_at_addition' => $course->discount_price,
         ]);
 
         return $this->getCart();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please rename the method to destroy...
+    |  please return success or error using trait...
+    |--------------------------------------------------------------------------
+    */
     public function removeFromCart($itemId)
     {
         $cart = ShoppingCart::where('user_id', Auth::id())->firstOrFail();
@@ -61,6 +81,11 @@ class CartController extends Controller
         return $this->getCart();
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateTotal(ShoppingCart $cart)
     {
         return $cart->items->reduce(function ($carry, $item) {

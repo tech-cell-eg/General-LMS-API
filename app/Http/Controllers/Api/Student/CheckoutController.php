@@ -1,10 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Api\Student;
-;
 
 use App\Http\Controllers\Controller;
-use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ShoppingCart;
@@ -17,6 +15,12 @@ class CheckoutController extends Controller
 {
     use ApiResponse;
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please rename the method to store...
+    |  Please use service repository...
+    |--------------------------------------------------------------------------
+    */
     public function checkout(Request $request)
     {
         $cart = ShoppingCart::with('items.course')
@@ -31,14 +35,14 @@ class CheckoutController extends Controller
             // Create order
             $order = Order::create([
                 'user_id' => Auth::id(),
-                'order_number' => 'ORD-' . strtoupper(uniqid()),
+                'order_number' => 'ORD-'.strtoupper(uniqid()),
                 'subtotal' => $this->calculateSubtotal($cart),
                 'discount' => $this->calculateDiscount($cart),
                 'tax' => $this->calculateTax($cart),
                 'total' => $this->calculateTotal($cart),
                 'payment_method' => $request->payment_method ?? 'stripe',
                 'payment_status' => 'pending',
-                'billing_address' => $request->billing_address
+                'billing_address' => $request->billing_address,
             ]);
 
             // Create order items
@@ -48,7 +52,7 @@ class CheckoutController extends Controller
                     'course_id' => $item->course_id,
                     'price' => $item->price_at_addition,
                     'discount' => $item->discount_at_addition,
-                    'final_price' => $item->discount_at_addition ?? $item->price_at_addition
+                    'final_price' => $item->discount_at_addition ?? $item->price_at_addition,
                 ]);
             }
 
@@ -60,16 +64,26 @@ class CheckoutController extends Controller
 
             return $this->success([
                 'order' => $order,
-                'items' => $order->items
+                'items' => $order->items,
             ], 'Checkout successful');
         });
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateSubtotal(ShoppingCart $cart)
     {
         return $cart->items->sum('price_at_addition');
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateDiscount(ShoppingCart $cart)
     {
         return $cart->items->reduce(function ($carry, $item) {
@@ -77,11 +91,21 @@ class CheckoutController extends Controller
         }, 0);
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateTax(ShoppingCart $cart)
     {
         return $this->calculateSubtotal($cart) * 0.1; // 10% tax
     }
 
+    /*
+    |--------------------------------------------------------------------------
+    |  Please use service to make this calculation or another way...
+    |--------------------------------------------------------------------------
+    */
     protected function calculateTotal(ShoppingCart $cart)
     {
         return $this->calculateSubtotal($cart) - $this->calculateDiscount($cart) + $this->calculateTax($cart);

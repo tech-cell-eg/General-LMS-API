@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Lesson extends Model
 {
@@ -12,15 +15,23 @@ class Lesson extends Model
         'content_type',
         'content_url',
         'preview_available',
-        'order'
+        'order',
     ];
 
-    public function section()
+    /**
+     * Get the section for the lesson.
+     * return the section that the lesson belongs to
+     */
+    public function section(): BelongsTo
     {
         return $this->belongsTo(Section::class);
     }
 
-    public function resources()
+    /**
+     * Get the resources for the lesson.
+     * return the resources for the lesson
+     */
+    public function resources(): HasMany
     {
         return $this->hasMany(Resource::class);
     }

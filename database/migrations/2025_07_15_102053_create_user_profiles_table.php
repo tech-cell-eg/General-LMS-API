@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('user_profiles', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-        $table->string('headline')->nullable();
-        $table->text('bio')->nullable();
-        $table->json('language_preferences')->nullable();
-        $table->json('social_links')->nullable();
-        $table->timestamps();
-    });
+        Schema::create('user_profiles', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->string('headline')->nullable();
+            $table->text('bio')->nullable();
+            $table->json('language_preferences')->nullable();
+            $table->json('social_links')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

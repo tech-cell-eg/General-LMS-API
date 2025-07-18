@@ -19,6 +19,12 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        /*
+        |--------------------------------------------------------------------------
+        |  Remove this and move it form request...
+        |--------------------------------------------------------------------------
+        */
+
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -59,7 +65,7 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('email', 'password'))) {
+        if (! Auth::attempt($request->only('email', 'password'))) {
             return $this->error('Invalid login details', 401);
         }
 
@@ -83,13 +89,18 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = $request->user()->load('profile');
+
         return $this->success(
             new UserResource($user),
             'User retrieved successfully'
         );
     }
 
-
+    /*
+    |--------------------------------------------------------------------------
+    |  Please more this in ProfileController...
+    |--------------------------------------------------------------------------
+    */
     public function updateProfile(UpdateProfileRequest $request)
     {
         $user = $request->user();
@@ -127,7 +138,7 @@ class AuthController extends Controller
         $user->update($data);
 
         // Update or create profile
-        if (!empty($profileData)) {
+        if (! empty($profileData)) {
             $user->profile()->updateOrCreate(['user_id' => $user->id], $profileData);
         }
 
@@ -137,7 +148,11 @@ class AuthController extends Controller
         );
     }
 
-
+    /*
+    |--------------------------------------------------------------------------
+    |  Please more this in in ProfileController...
+    |--------------------------------------------------------------------------
+    */
     public function updatePassword(Request $request)
     {
         $request->validate([

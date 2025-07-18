@@ -1,14 +1,18 @@
 <?php
+
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
 class User extends Authenticatable
 {
-    use Notifiable, SoftDeletes, HasFactory, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'first_name',
@@ -18,85 +22,145 @@ class User extends Authenticatable
         'password',
         'avatar_url',
         'role',
-        'email_verified_at'
+        'email_verified_at',
     ];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     protected $hidden = ['password', 'remember_token'];
 
-    public function profile()
+    /**
+     * Get the profile for the user.
+     * return the profile for the user
+     */
+    public function profile(): HasOne
     {
         return $this->hasOne(UserProfile::class);
     }
 
-    public function instructorProfile()
+    /**
+     * Get the instructor profile for the user.
+     * return the instructor profile for the user
+     */
+    public function instructorProfile(): HasOne
     {
         return $this->hasOne(Instructor::class);
     }
 
-    public function courses()
+    /**
+     * Get the courses for the user.
+     * return the courses for the user
+     */
+    public function courses(): HasMany
     {
         return $this->hasMany(Course::class, 'instructor_id');
     }
 
-    public function enrollments()
+    /**
+     * Get the enrollments for the user.
+     * return the enrollments for the user
+     */
+    public function enrollments(): HasMany
     {
         return $this->hasMany(Enrollment::class);
     }
 
-    public function reviews()
+    /**
+     * Get the reviews for the user.
+     * return the reviews for the user
+     */
+    public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
     }
 
-    public function cart()
+    /**
+     * Get the cart for the user.
+     * return the cart for the user
+     */
+    public function cart(): HasOne
     {
         return $this->hasOne(ShoppingCart::class);
     }
 
-    public function orders()
+    /**
+     * Get the orders for the user.
+     * return the orders for the user
+     */
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    public function testimonials()
+    /**
+     * Get the testimonials for the user.
+     * return the testimonials for the user
+     */
+    public function testimonials(): HasMany
     {
         return $this->hasMany(Testimonial::class);
     }
 
-    public function sentMessages()
+    /**
+     * Get the sent messages for the user.
+     * return the sent messages for the user
+     */
+    public function sentMessages(): HasMany
     {
         return $this->hasMany(Message::class, 'sender_id');
     }
 
-    public function receivedMessages()
+    /**
+     * Get the received messages for the user.
+     * return the received messages for the user
+     */
+    public function receivedMessages(): HasMany
     {
         return $this->hasMany(Message::class, 'recipient_id');
     }
 
-    public function instructorLinks()
+    /**
+     * Get the instructor links for the user.
+     * return the instructor links for the user
+     */
+    public function instructorLinks(): HasMany
     {
         return $this->hasMany(InstructorLink::class, 'instructor_id');
     }
 
+    /**
+     * Get the image url for the user.
+     * return the image url for the user
+     */
     public function ImageUrlAttribute()
     {
-        return $this->avatar_url ? asset('storage/' . $this->avatar_url) : null;
+        return $this->avatar_url ? asset('storage/'.$this->avatar_url) : null;
     }
+
+    /**
+     * Get the avatar url for the user.
+     * return the avatar url for the user
+     */
     public function getAvatarUrlAttribute($value)
     {
-        return $value ? asset('storage/' . $value) : null;
+        return $value ? asset('storage/'.$value) : null;
     }
 
-
-
-
+    /**
+     * Get the is instructor for the user.
+     * return the is instructor for the user
+     */
     public function isInstructor()
     {
         return $this->type === 'instructor'; // or whatever your instructor check is
     }
 
+    /**
+     * Get the total students for the user.
+     * return the total students for the user
+     */
     public function totalStudents()
     {
         return $this->courses()
@@ -105,6 +169,10 @@ class User extends Authenticatable
             ->count('enrollments.user_id');
     }
 
+    /**
+     * Get the average rating for the user.
+     * return the average rating for the user
+     */
     public function averageRating()
     {
         return $this->courses()
