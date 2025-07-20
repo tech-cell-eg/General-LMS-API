@@ -18,6 +18,11 @@ class Lesson extends Model
         'order',
     ];
 
+     protected $casts = [
+        'preview_available' => 'boolean',
+        'duration_minutes' => 'integer',
+        'order' => 'integer'
+    ];
     /**
      * Get the section for the lesson.
      * return the section that the lesson belongs to

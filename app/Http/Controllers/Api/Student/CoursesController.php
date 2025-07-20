@@ -16,27 +16,24 @@ class CoursesController extends Controller
 
     public function index(Request $request)
     {
-        $perPage = $request->input('per_page', 10); // Default to 10 items per page
+        $perPage = $request->input('per_page', 10);
 
         $query = Course::query()
             ->with(['instructor', 'reviews'])
             ->withAvg('reviews', 'rating')
             ->withCount(['reviews', 'sections']);
 
-        // Apply filters - only the requested ones
+        // Apply filters and sorting
         $filters = $request->only([
-            'rate',          // Filter by minimum rating
-            'price',         // Filter by maximum price
-            'category',     // Filter by category ID
-            'sections',       // Filter by minimum number of sections
-            'is_featured', // Filter by featured status
+            'rate',
+            'price',
+            'category',
+            'sections',
+            'is_featured',
+            'sort_by'
         ]);
 
         $query = (new CourseFilter)->apply($query, $filters);
-
-        // Apply sorting
-        $sortBy = $request->input('sort_by', 'latest'); // Default sorting
-        $query = $this->applySorting($query, $sortBy);
 
         $courses = $query->paginate($perPage);
 
@@ -44,28 +41,6 @@ class CoursesController extends Controller
             new CourseCollection($courses),
             'Courses retrieved successfully'
         );
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Please move this to CourseFilter...
-    |--------------------------------------------------------------------------
-    */
-    protected function applySorting($query, $sortBy)
-    {
-        switch ($sortBy) {
-            case 'highest_rated':
-                return $query->orderBy('reviews_avg_rating', 'desc');
-            case 'most_reviews':
-                return $query->orderBy('reviews_count', 'desc');
-            case 'price_low':
-                return $query->orderBy('price', 'asc');
-            case 'price_high':
-                return $query->orderBy('price', 'desc');
-            case 'latest':
-            default:
-                return $query->latest();
-        }
     }
 
     public function show($id)

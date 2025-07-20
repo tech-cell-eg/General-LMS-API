@@ -11,9 +11,14 @@ class Section extends Model
         'course_id',
         'title',
         'order',
-        'description'
+        'description',
+        'status'
+
     ];
 
+     protected $casts = [
+        'order' => 'integer'
+    ];
     /**
      * Get the course for the section.
      * return the course that the section belongs to
@@ -30,5 +35,16 @@ class Section extends Model
     public function lessons(): HasMany
     {
         return $this->hasMany(Lesson::class)->orderBy('order');
+    }
+
+    public function seo()
+    {
+        return $this->hasOne(SectionSeo::class);
+    }
+
+    // Accessor for section price (gets from course)
+    public function getPriceAttribute()
+    {
+        return $this->course->price;
     }
 }

@@ -12,7 +12,6 @@ class MyCourseController extends Controller
 {
     use ApiResponse;
 
-    // Get courses the student is enrolled in
     public function index()
     {
         $user = Auth::user();
@@ -29,7 +28,6 @@ class MyCourseController extends Controller
         ], 'My courses retrieved successfully');
     }
 
-    // Get course details
     public function show(Course $course)
     {
         $course->load([
@@ -40,7 +38,6 @@ class MyCourseController extends Controller
             'reviews.user',
         ]);
 
-        // Check if user is enrolled
         $isEnrolled = Enrollment::where('user_id', Auth::id())
             ->where('course_id', $course->id)
             ->exists();
@@ -48,21 +45,7 @@ class MyCourseController extends Controller
         return $this->success([
             'course' => $course,
             'is_enrolled' => $isEnrolled,
-            'similar_courses' => $this->getSimilarCourses($course),
+            'similar_courses' => app(SimilarCoursesController::class)->getSimilarCourses($course),
         ], 'Course details retrieved successfully');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Please make this in another controller because this make the controller make more than one responsibility...
-    |--------------------------------------------------------------------------
-    */
-    protected function getSimilarCourses(Course $course)
-    {
-        return Course::where('category_id', $course->category_id)
-            ->where('id', '!=', $course->id)
-            ->with('instructor')
-            ->limit(4)
-            ->get();
     }
 }

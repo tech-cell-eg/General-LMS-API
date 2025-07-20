@@ -3,56 +3,41 @@
 namespace App\Http\Controllers\Api\Student;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Student\AddToCartRequest;
 use App\Models\CartItem;
 use App\Models\Course;
 use App\Models\ShoppingCart;
+use App\Services\CartService;
 use App\Traits\ApiResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     use ApiResponse;
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Please not use try and catch ...
-    |  Please rename the method to index...
-    |--------------------------------------------------------------------------
-    */
-    public function getCart()
-    {
-        try {
-            $cart = ShoppingCart::firstOrCreate(['user_id' => Auth::id()]);
-            $cart->load('items.course');
+    protected $cartService;
 
-            return $this->success([
-                'cart' => $cart,
-                'total' => $this->calculateTotal($cart),
-            ], 'Cart retrieved successfully');
-        } catch (\Exception $e) {
-            return $this->error('Failed to retrieve cart: '.$e->getMessage(), 500);
-        }
+    public function __construct(CartService $cartService)
+    {
+        $this->cartService = $cartService;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Please rename the method to store...
-    |  Please not use try and catch ...
-    |  Please make the validation in separate form request...
-    |  please return success or error using trait...
-    |--------------------------------------------------------------------------
-    */
-    public function addToCart(Request $request)
+    public function index()
     {
-        $request->validate([
-            'course_id' => 'required|exists:courses,id',
-        ]);
+        $cart = ShoppingCart::firstOrCreate(['user_id' => Auth::id()]);
+        $cart->load('items.course');
 
+        return $this->success([
+            'cart' => $cart,
+            'total' => $this->cartService->calculateTotal($cart),
+        ], 'Cart retrieved successfully');
+    }
+
+    public function store(AddToCartRequest $request)
+    {
         $course = Course::findOrFail($request->course_id);
         $cart = ShoppingCart::firstOrCreate(['user_id' => Auth::id()]);
 
-        // Check if course already in cart
         if ($cart->items()->where('course_id', $course->id)->exists()) {
             return $this->error('Course already in cart', 400);
         }
@@ -64,32 +49,14 @@ class CartController extends Controller
             'discount_at_addition' => $course->discount_price,
         ]);
 
-        return $this->getCart();
+        return $this->index();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Please rename the method to destroy...
-    |  please return success or error using trait...
-    |--------------------------------------------------------------------------
-    */
-    public function removeFromCart($itemId)
+    public function destroy($itemId)
     {
         $cart = ShoppingCart::where('user_id', Auth::id())->firstOrFail();
         $cart->items()->where('id', $itemId)->delete();
 
-        return $this->getCart();
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Please use service to make this calculation or another way...
-    |--------------------------------------------------------------------------
-    */
-    protected function calculateTotal(ShoppingCart $cart)
-    {
-        return $cart->items->reduce(function ($carry, $item) {
-            return $carry + ($item->discount_at_addition ?? $item->price_at_addition);
-        }, 0);
+        return $this->index();
     }
 }

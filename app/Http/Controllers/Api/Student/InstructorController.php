@@ -15,7 +15,7 @@ class InstructorController extends Controller
     {
         $instructors = User::query()
             ->where('role', 'instructor')
-            ->with(['instructorProfile']) // Eager load the instructor profile
+            ->with(['instructorProfile'])
             ->withCount(['courses', 'enrollments'])
             ->withAvg([
                 'courses as courses_avg_reviews_avg_rating' => function ($query) {
@@ -32,10 +32,9 @@ class InstructorController extends Controller
         );
     }
 
-    // Get instructor details
     public function show(User $instructor)
     {
-        if (! $instructor->isInstructor()) {
+        if (!$instructor->isInstructor()) {
             return $this->error('The specified user is not an instructor', 404);
         }
 
@@ -48,23 +47,5 @@ class InstructorController extends Controller
                 'average_rating' => $instructor->averageRating(),
             ],
         ], 'Instructor details retrieved successfully');
-    }
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Please user controller to get courses because this make the controller make more than one responsibility...
-    |--------------------------------------------------------------------------
-    */
-    // Get courses by this instructor
-    public function courses(User $instructor)
-    {
-        $courses = $instructor->courses()
-            ->with(['category'])
-            ->paginate(10);
-
-        return $this->success([
-            'courses' => $courses,
-            'instructor' => $instructor->only(['id', 'name', 'avatar']),
-        ], 'Instructor courses retrieved successfully');
     }
 }

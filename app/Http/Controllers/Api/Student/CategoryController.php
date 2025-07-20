@@ -35,23 +35,4 @@ class CategoryController extends Controller
             'Category retrieved successfully'
         );
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    |  Please use invokable class for this method...
-    |  exist an error in CategoryCollection...
-    |--------------------------------------------------------------------------
-    */
-    public function popular()
-    {
-        $categories = Category::withCount('courses')
-            ->orderBy('courses_count', 'desc')
-            ->limit(5)
-            ->get();
-
-        return $this->success(
-            new CategoryCollection($categories),
-            'Popular categories retrieved successfully'
-        );
-    }
 }

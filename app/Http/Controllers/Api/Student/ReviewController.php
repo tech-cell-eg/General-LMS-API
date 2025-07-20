@@ -12,13 +12,8 @@ class ReviewController extends Controller
 {
     use ApiResponse;
 
-    /*
-    |--------------------------------------------------------------------------
-    |  Please rename the method to index and rename the method to myReviews...
-    |--------------------------------------------------------------------------
-    */
     // Get my reviews
-    public function myReviews()
+    public function index()
     {
         $reviews = Review::where('user_id', Auth::id())
             ->with(['reviewable' => function ($query) {
