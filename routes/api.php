@@ -7,7 +7,10 @@ use App\Http\Controllers\Api\Dashboard\InstructorCoursesController;
 use App\Http\Controllers\Api\Dashboard\InstructorReviewesController;
 use App\Http\Controllers\Api\Dashboard\InstructorStudentsController;
 use App\Http\Controllers\Api\Dashboard\LessonController;
+use App\Http\Controllers\Api\Dashboard\LmsAnalyticsController;
 use App\Http\Controllers\Api\Dashboard\ResourceController;
+use App\Http\Controllers\Api\Dashboard\RevenueController;
+use App\Http\Controllers\Api\Dashboard\ReviewController as DashboardReviewController;
 use App\Http\Controllers\Api\Dashboard\SectionController;
 use App\Http\Controllers\Api\Dashboard\SectionResourceController;
 use App\Http\Controllers\Api\Dashboard\SectionSeoController;
@@ -18,10 +21,13 @@ use App\Http\Controllers\Api\Student\CoursesController;
 use App\Http\Controllers\Api\Student\InstructorController;
 use App\Http\Controllers\Api\Student\MyCourseController;
 use App\Http\Controllers\Api\Student\PopularCategoriesController;
+
 use App\Http\Controllers\Api\Student\ReviewController;
 use App\Http\Controllers\Api\Student\TestimonialController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 
@@ -123,4 +129,20 @@ Route::prefix('instructor')->middleware(['auth:sanctum'])->group(function () {
     Route::delete('/courses/{id}', [InstructorCoursesController::class, 'destroy']);
     Route::post('/courses/{id}/publish', [InstructorCoursesController::class, 'publish']);
     Route::post('/courses/{id}/draft', [InstructorCoursesController::class, 'draft']);
+});
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('instructor/all/reviews', [DashboardReviewController::class, 'index']);
+    Route::get('instructor/reviews/{review}', [DashboardReviewController::class, 'show']);
+    Route::post('instructor/reviews/{review}/answer', [DashboardReviewController::class, 'answer']);
+    Route::get('instructor/reviews/export/csv', [DashboardReviewController::class, 'export']);
+
+    Route::prefix('analytics')->group(function () {
+        Route::get('/summary', [LmsAnalyticsController::class, 'getSummaryMetrics']);
+        Route::get('/sales-trends', [LmsAnalyticsController::class, 'getSalesTrends']);
+        Route::get('/course-performance', [LmsAnalyticsController::class, 'getCoursePerformance']);
+        Route::get('/review-stats', [LmsAnalyticsController::class, 'getReviewStats']);
+    });
+    Route::get('/revenue/analytics', [RevenueController::class, 'analytics']);
 });

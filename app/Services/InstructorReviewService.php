@@ -34,19 +34,23 @@ class InstructorReviewService
         ];
     }
 
-    public function getPaginatedReviews(int $instructorId, int $perPage = 10)
-    {
-        return Review::with(['user', 'reviewable'])
-            ->where('reviewable_type', Course::class)
-            ->whereHas('reviewable', function ($query) use ($instructorId) {
+public function getPaginatedReviews(int $instructorId, int $perPage = 10)
+{
+    return Review::with(['user', 'reviewable'])
+        ->where('reviewable_type', Course::class)
+        ->whereHasMorph(
+            'reviewable',
+            [Course::class],
+            function ($query) use ($instructorId) {
                 $query->where('instructor_id', $instructorId);
-            })
-            ->orderBy('created_at', 'desc')
-            ->paginate($perPage)
-            ->through(function ($review) {
-                return $this->formatReview($review);
-            });
-    }
+            }
+        )
+        ->orderBy('created_at', 'desc')
+        ->paginate($perPage)
+        ->through(function ($review) {
+            return $this->formatReview($review);
+        });
+}
 
     protected function formatReview(Review $review): array
     {
