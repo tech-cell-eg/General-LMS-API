@@ -182,4 +182,8 @@ class User extends Authenticatable
             })
             ->avg('reviews.rating');
     }
+
+    public function isOnline(){
+        return cache()->has('user-is-online-' . $this->id);
+    }
 }

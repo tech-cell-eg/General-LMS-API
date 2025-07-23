@@ -20,7 +20,7 @@ class CourseCollection extends ResourceCollection
         |--------------------------------------------------------------------------
         */
         return [
-            'data' => CourseResource::collection($this->collection),
+            'courses' => CourseResource::collection($this->collection),
             'meta' => [
                 'current_page' => $this->currentPage(),
                 'last_page' => $this->lastPage(),

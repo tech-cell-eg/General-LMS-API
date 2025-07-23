@@ -25,7 +25,9 @@ use App\Http\Controllers\Api\Student\PopularCategoriesController;
 use App\Http\Controllers\Api\Student\ReviewController;
 use App\Http\Controllers\Api\Student\TestimonialController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -146,3 +148,19 @@ Route::middleware('auth:sanctum')->group(function () {
     });
     Route::get('/revenue/analytics', [RevenueController::class, 'analytics']);
 });
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('chat')->group(function () {
+        Route::get('/messages/{user}', [\App\Http\Controllers\Api\Chat\MessageController::class, 'index']);
+        Route::post('/messages/{user}', [\App\Http\Controllers\Api\Chat\MessageController::class, 'store']);
+        Route::post('/messages/{user}/read', [\App\Http\Controllers\Api\Chat\MessageController::class, 'markAsRead']);
+    });
+});
+
+
+
+Route::post('/broadcasting/auth', function (Request $request) {
+    $request->headers->set('X-Socket-ID', $request->socket_id);
+    return Broadcast::auth($request);
+})->middleware(['auth:sanctum']);
