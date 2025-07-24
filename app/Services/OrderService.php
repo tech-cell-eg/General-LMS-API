@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Enrollment;
 use App\Models\Order;
 use App\Models\ShoppingCart;
 use Illuminate\Support\Facades\DB;
@@ -28,9 +29,9 @@ class OrderService
             // Create order
             $order = Order::create([
                 'user_id' => $cart->user_id,
-                'order_number' => 'ORD-'.strtoupper(uniqid()),
+                'order_number' => 'ORD-' . strtoupper(uniqid()),
                 'subtotal' => $subtotal,
-                'discount' => $discount,
+                'discount' => $discount ?? 0,
                 'tax' => $tax,
                 'total' => $total,
                 'payment_method' => $checkoutData['payment_method'] ?? 'stripe',
@@ -38,13 +39,21 @@ class OrderService
                 'billing_address' => $checkoutData['billing_address'],
             ]);
 
-            // Create order items
+            // Create order items and enrollments
             foreach ($cart->items as $item) {
-                $order->items()->create([
+                $orderItem = $order->items()->create([
                     'course_id' => $item->course_id,
                     'price' => $item->price_at_addition,
-                    'discount' => $item->discount_at_addition,
+                    'discount' => $item->discount_at_addition ?? 0,
                     'final_price' => $item->discount_at_addition ?? $item->price_at_addition,
+                ]);
+
+                // Create enrollment for each course
+                Enrollment::create([
+                    'user_id' => $cart->user_id,
+                    'course_id' => $item->course_id,
+                    'order_id' => $order->id,
+                    'progress_percentage' => 0,
                 ]);
             }
 

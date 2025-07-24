@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Course extends Model
 {
@@ -113,6 +114,24 @@ class Course extends Model
      */
     public function getImageUrlAttribute()
     {
-        return $this->thumbnail_url ? asset('storage/'.$this->thumbnail_url) : null;
+        return $this->thumbnail_url ? asset('storage/' . $this->thumbnail_url) : null;
     }
+
+
+   public function scopeSearch(Builder $query, string $searchTerm): Builder
+{
+    return $query->whereHas('instructor') // Only courses with an instructor
+        ->where(function($q) use ($searchTerm) {
+            $q->where('title', 'like', "%{$searchTerm}%")
+            //   ->orWhere('description', 'like', "%{$searchTerm}%")
+              ->orWhereHas('instructor', function($q) use ($searchTerm) {
+                  $q->where('first_name', 'like', "%{$searchTerm}%")
+                    ->orWhere('last_name', 'like', "%{$searchTerm}%");
+              })
+              ->orWhereHas('category', function($q) use ($searchTerm) {
+                  $q->where('name', 'like', "%{$searchTerm}%");
+              });
+        });
+}
+
 }

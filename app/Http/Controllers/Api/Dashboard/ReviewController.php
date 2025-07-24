@@ -23,24 +23,24 @@ class ReviewController extends Controller
         $this->reviewService = $reviewService;
     }
 
-public function index(Request $request)
-{
-    $instructorId = auth()->id();
-    $perPage = $request->input('per_page', 10);
+    public function index(Request $request)
+    {
+        $instructorId = auth()->id();
+        $perPage = $request->input('per_page', 10);
 
-    $reviews = $this->reviewService->getInstructorReviews(
-        $instructorId,
-        $perPage,
-        $request->has('has_comment') ? $request->boolean('has_comment') : null,
-        $request->has('not_answered') ? $request->boolean('not_answered') : null,
-        $request->input('sort', 'desc')
-    );
+        $reviews = $this->reviewService->getInstructorReviews(
+            $instructorId,
+            $perPage,
+            $request->has('has_comment') ? $request->boolean('has_comment') : null,
+            $request->has('not_answered') ? $request->boolean('not_answered') : null,
+            $request->input('sort', 'desc')
+        );
 
-    return $this->success(
-        ReviewResource::collection($reviews),
-        'Reviews data retrieved successfully'
-    );
-}
+        return $this->success(
+            ReviewResource::collection($reviews),
+            'Reviews data retrieved successfully'
+        );
+    }
     public function show(Review $review)
     {
         return $this->success(
@@ -61,7 +61,7 @@ public function index(Request $request)
 
     public function export(Request $request)
     {
-        $instructorId = 6;
+        $instructorId = auth()->id();
         $filters = $request->only(['has_comment', 'not_answered', 'sort']);
 
         return (new ReviewExportService($instructorId, $filters))

@@ -2,8 +2,12 @@
 
 namespace App\Models;
 
+use App\Models\InstructorLink;
+use App\Models\Review;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Instructor extends Model
@@ -37,5 +41,15 @@ class Instructor extends Model
     public function courses(): HasManyThrough
     {
         return $this->hasManyThrough(Course::class, User::class, 'id', 'instructor_id');
+    }
+
+      public function links(): HasMany
+    {
+        return $this->hasMany(InstructorLink::class, 'instructor_id');
+    }
+
+    public function reviews()
+    {
+        return $this->morphMany(Review::class, 'reviewable');
     }
 }

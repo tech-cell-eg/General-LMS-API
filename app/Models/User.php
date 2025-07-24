@@ -5,6 +5,7 @@ namespace App\Models;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -136,7 +137,7 @@ class User extends Authenticatable
      */
     public function ImageUrlAttribute()
     {
-        return $this->avatar_url ? asset('storage/'.$this->avatar_url) : null;
+        return $this->avatar_url ? asset('storage/' . $this->avatar_url) : null;
     }
 
     /**
@@ -145,7 +146,7 @@ class User extends Authenticatable
      */
     public function getAvatarUrlAttribute($value)
     {
-        return $value ? asset('storage/'.$value) : null;
+        return $value ? asset('storage/' . $value) : null;
     }
 
     /**
@@ -154,7 +155,8 @@ class User extends Authenticatable
      */
     public function isInstructor()
     {
-        return $this->type === 'instructor'; // or whatever your instructor check is
+        return $this->role === 'instructor';
+
     }
 
     /**
@@ -182,4 +184,16 @@ class User extends Authenticatable
             })
             ->avg('reviews.rating');
     }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function instructor()
+    {
+        return $this->hasOne(Instructor::class);
+    }
+
+
 }

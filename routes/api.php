@@ -26,26 +26,24 @@ use App\Http\Controllers\Api\Student\ReviewController;
 use App\Http\Controllers\Api\Student\TestimonialController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\Auth\ProfileController;
+use App\Http\Controllers\Api\Auth\PasswordController;
 
 
 
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
 
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
 
+    Route::get('profile', [ProfileController::class, 'show']);
+    Route::put('profile', [ProfileController::class, 'update']);
 
-
-
-
-
-
-
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::put('password', [PasswordController::class, 'update']);
+    Route::post('password/forgot', [PasswordController::class, 'forgot']);
+    Route::post('password/reset', [PasswordController::class, 'reset']);
 });
-
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/login', [AuthController::class, 'login']);
-
 // Category Routes
 Route::resource('categories', CategoryController::class)->only('index', 'show'); // Route
 Route::get('categories/popular', PopularCategoriesController::class);
@@ -55,12 +53,7 @@ Route::get('instructors', [InstructorController::class, 'index']);
 Route::get('testimonials', [TestimonialController::class, 'index']);
 
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/profile', [AuthController::class, 'user']);
-    Route::put('/profile', [AuthController::class, 'updateProfile']);
-    Route::put('/profile/password', [AuthController::class, 'updatePassword']);
-
+Route::middleware('auth:sanctum')->group(callback: function () {
     Route::get('courses/{course}', [CoursesController::class, 'show']);
 
     // Cart routes
@@ -69,7 +62,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/cart/remove/{itemId}', [CartController::class, 'destroy']);
 
     // Checkout route
-    Route::post('/checkout', [CheckoutController::class, 'checkout']);
+    Route::post('/checkout', [CheckoutController::class, 'store']);
 
 
     // My Courses (Courses I'm enrolled in)
@@ -86,6 +79,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // My Reviews
     Route::get('/my-reviews', [ReviewController::class, 'index']);
+
+    Route::post('/reviews/instructor/store', [ReviewController::class, 'store']);
+
 });
 
 

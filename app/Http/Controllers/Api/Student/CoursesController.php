@@ -14,6 +14,7 @@ class CoursesController extends Controller
 {
     use ApiResponse;
 
+
     public function index(Request $request)
     {
         $perPage = $request->input('per_page', 10);
@@ -22,6 +23,11 @@ class CoursesController extends Controller
             ->with(['instructor', 'reviews'])
             ->withAvg('reviews', 'rating')
             ->withCount(['reviews', 'sections']);
+
+        // Apply search if search parameter exists
+        if ($request->has('search')) {
+            $query->search($request->input('search'));
+        }
 
         // Apply filters and sorting
         $filters = $request->only([

@@ -28,7 +28,7 @@ class CourseRequest extends FormRequest
             'price' => 'nullable|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'category_id' => 'nullable|exists:categories,id',
-            'intro_video' => 'nullable|file|mimes:mov,mp4|max:102400',
+            'intro_video' => 'nullable|file|max:102400',
             'intro_image' => 'nullable|image|mimes:jpeg,png|max:2048',
             'thumbnail' => 'nullable|image|mimes:jpeg,png|max:2048',
             'difficulty_level' => 'nullable|in:beginner,intermediate,advanced',
@@ -42,6 +42,7 @@ class CourseRequest extends FormRequest
             'target_audience' => 'nullable|string',
             'syllabus' => 'nullable|string',
             'faqs' => 'nullable|string',
+            'status' => 'nullable|in:draft,published',
         ];
     }
 }

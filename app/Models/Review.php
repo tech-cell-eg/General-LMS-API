@@ -23,6 +23,10 @@ class Review extends Model
         'answered_at' => 'datetime'
     ];
 
+    const REVIEWABLE_TYPES = [
+        'course' => Course::class,
+        'instructor' => User::class,
+    ];
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
