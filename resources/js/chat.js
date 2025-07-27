@@ -35,10 +35,13 @@ document.addEventListener('DOMContentLoaded', async function () {
             });
 
             // Subscribe to private channel
-            window.Echo.private(`user.${userId}`)
-                .listen('.message.new', (data) => {
-                    console.log('New message received:', data);
-                    addMessageToChat(data.message);
+            window.Echo.private('user.' + userId)
+                .listen('.message.new', (e) => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'mb-2 text-end';
+                    messageDiv.innerHTML = `<span class="badge bg-secondary">${e.message.message}</span>`;
+                    chatBox.appendChild(messageDiv);
+                    chatBox.scrollTop = chatBox.scrollHeight;
                 });
 
         } catch (error) {

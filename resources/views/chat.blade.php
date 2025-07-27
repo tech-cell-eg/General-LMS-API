@@ -14,18 +14,20 @@
     <script>
         // Initialize Echo with the token
         window.EchoConfig = {
-            broadcaster: 'pusher',
-            key: '{{ config('broadcasting.connections.pusher.key') }}',
-            cluster: '{{ config('broadcasting.connections.pusher.options.cluster') }}',
-            forceTLS: true,
-            authEndpoint: '/broadcasting/auth',
-            auth: {
-                headers: {
-                    'Authorization': 'Bearer {{ $token }}',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            }
-        };
+    broadcaster: 'reverb',
+    key: '{{ config('broadcasting.connections.reverb.key') }}',
+    wsHost: window.location.hostname,
+    wsPort: 8080,
+    forceTLS: false,
+    enabledTransports: ['ws', 'wss'],
+    authEndpoint: '/broadcasting/auth',
+    auth: {
+        headers: {
+            'Authorization': 'Bearer {{ $token }}',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    }
+};
     </script>
 </head>
 
@@ -91,15 +93,14 @@
             );
 
             // subscribe to chat channel
-            window.Echo.private('user.' + senderId)
-                        .listen('MessageSent', (e) => {
-                            // show the message
-                            const messageDiv = document.createElement('div');
-                            messageDiv.className = 'mb-2 text-end';
-                            messageDiv.innerHTML = `<span class="badge bg-secondary">${e.message.message}</span>`;
-                            chatBox.appendChild(messageDiv);
-                            chatBox.scrollTop = chatBox.scrollHeight;
-                        });
+           window.Echo.private('user.' + senderId)
+                .listen('.message.new', (e) => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'mb-2 text-end';
+                    messageDiv.innerHTML = `<span class="badge bg-secondary">${e.message.message}</span>`;
+                    chatBox.appendChild(messageDiv);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
 
             // subscribe to typing channel
             window.Echo.private('typing.' + recipientId)
@@ -109,48 +110,48 @@
                                 setTimeout(() => typingIndicator.style.display = 'none', 3000);
                             }
                         });
-
-          messageForm.addEventListener('submit', function (e) {
+messageForm.addEventListener('submit', function (e) {
     e.preventDefault();
     const message = messageInput.value;
     if (message) {
-        console.log('Attempting to send message:', message); // Debug log
+        // Add the message to UI immediately
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'mb-2 text-start';
+        messageDiv.innerHTML = `<span class="badge bg-primary">${message}</span>`;
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
 
+        // Then send to server
         fetch(`/api/chat/messages/${recipientId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('sanctum_token'),
+                'Authorization': 'Bearer {{ $token }}',
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             body: JSON.stringify({ message: message })
         })
         .then(response => {
-            console.log('Response status:', response.status); // Debug log
-            if (!response.ok) {
-                return response.json().then(err => { throw err; });
-            }
+            if (!response.ok) throw response;
             return response.json();
         })
         .then(data => {
-            console.log('Message sent successfully:', data); // Debug log
-            // Add the new message to the chat box
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'mb-2 text-start';
-            messageDiv.innerHTML = `<span class="badge bg-primary">${message}</span>`;
-            chatBox.appendChild(messageDiv);
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Clear the input field
             messageInput.value = '';
         })
         .catch(error => {
-            console.error('Error sending message:', error);
-            alert('Failed to send message: ' + (error.message || 'Unknown error'));
+            error.json().then(err => {
+                console.error('Error sending message:', err);
+                alert('Failed to send message: ' + (err.message || 'Unknown error'));
+                // Optionally remove the message from UI if send failed
+                messageDiv.remove();
+            });
         });
     }
 });
+
+
+
             let typingTimeOut;
             messageInput.addEventListener('input', function () {
                 clearTimeout(typingTimeOut);

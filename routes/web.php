@@ -31,7 +31,7 @@ Route::prefix('api')->middleware('auth:sanctum')->group(function () {
     Route::post('/offline', [MessageController::class, 'setOffline']);
     Route::prefix('chat')->group(function () {
         Route::get('/messages/{user}', [MessageController::class, 'index']);
-        // Route::post('/messages/{user}', [MessageController::class, 'store']);
+        Route::post('/messages/{user}', [MessageController::class, 'store']);
         Route::post('/messages/{user}/read', [MessageController::class, 'markAsRead']);
         Route::post('/typing', [MessageController::class, 'typing']);
 

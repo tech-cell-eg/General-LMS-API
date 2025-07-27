@@ -1,3 +1,5 @@
+
+
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 
@@ -27,3 +29,4 @@ const initializeEcho = () => {
 };
 
 window.Echo = initializeEcho();
+

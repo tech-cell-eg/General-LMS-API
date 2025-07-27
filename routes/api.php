@@ -153,14 +153,35 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('chat')->group(function () {
         Route::get('/messages/{user}', [\App\Http\Controllers\Api\Chat\MessageController::class, 'index']);
-        Route::post('/messages/{user}', [\App\Http\Controllers\Api\Chat\MessageController::class, 'store']);
+        // Route::post('/messages/{user}', [\App\Http\Controllers\Api\Chat\MessageController::class, 'store']);
         Route::post('/messages/{user}/read', [\App\Http\Controllers\Api\Chat\MessageController::class, 'markAsRead']);
     });
 });
 
 
+// Route::post('/broadcasting/auth', function (Request $request) {
+//     if (!auth()->check()) {
+//         abort(403, 'Unauthorized');
+//     }
 
-Route::post('/broadcasting/auth', function (Request $request) {
-    $request->headers->set('X-Socket-ID', $request->socket_id);
-    return Broadcast::auth($request);
+//     $channelParts = explode('.', $request->channel_name);
+
+//     // Allow access to user's own channel or channels they have messaged with
+//     if ($channelParts[0] === 'private-user') {
+//         $targetUserId = $channelParts[1];
+
+//         if (
+//             (int) auth()->id() === (int) $targetUserId ||
+//             auth()->user()->hasSentOrReceivedMessagesWith($targetUserId)
+//         ) {
+//             return Broadcast::auth($request);
+//         }
+//     }
+
+//     abort(403, 'Access denied to this channel');
+// })->middleware(['auth:sanctum']);
+
+
+Route::post('/broadcasting/auth', function () {
+    return Broadcast::auth(request());
 })->middleware(['auth:sanctum']);

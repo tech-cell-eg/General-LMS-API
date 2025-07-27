@@ -136,7 +136,7 @@ class User extends Authenticatable
      */
     public function ImageUrlAttribute()
     {
-        return $this->avatar_url ? asset('storage/'.$this->avatar_url) : null;
+        return $this->avatar_url ? asset('storage/' . $this->avatar_url) : null;
     }
 
     /**
@@ -145,7 +145,7 @@ class User extends Authenticatable
      */
     public function getAvatarUrlAttribute($value)
     {
-        return $value ? asset('storage/'.$value) : null;
+        return $value ? asset('storage/' . $value) : null;
     }
 
     /**
@@ -183,7 +183,23 @@ class User extends Authenticatable
             ->avg('reviews.rating');
     }
 
-    public function isOnline(){
+    public function isOnline()
+    {
         return cache()->has('user-is-online-' . $this->id);
+    }
+
+
+    // In app/Models/User.php
+    public function hasSentOrReceivedMessagesWith($userId)
+    {
+        return Message::where(function ($query) use ($userId) {
+            $query->where('sender_id', $this->id)
+                ->where('recipient_id', $userId);
+        })
+            ->orWhere(function ($query) use ($userId) {
+                $query->where('sender_id', $userId)
+                    ->where('recipient_id', $this->id);
+            })
+            ->exists();
     }
 }
